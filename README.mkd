@@ -1,0 +1,26 @@
+# boxgrinder-appliances
+
+A set of configuration files for building VM base images for (potentially)
+multiple providers (e.g. VMWare ESX, Amazon EC2, KVM, etc.).
+
+## Usage
+
+You will need to be on an Ubuntu machine (perhaps a VM) to successfully build
+an Ubuntu VM. If you haven't already, you'll need to install [boxgrinder][bg].
+
+[bg]: http://boxgrinder.org/
+
+    sudo apt-add-repository ppa:rubiojr/boxgrinder-stable
+    sudo apt-get update
+    sudo apt-get install boxgrinder-build rubygems
+
+You should now be able to build a VM by calling the appropriate `make` task:
+
+    make ubuntu-precise
+
+The resulting built VMs will be in a subdirectory of the `build/` directory.
+
+
+    
+
+

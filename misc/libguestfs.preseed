@@ -1,0 +1,2 @@
+# Create or update supermin appliance now?
+libguestfs0	libguestfs/update-appliance	boolean	true

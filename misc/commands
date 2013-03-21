@@ -1,0 +1,2 @@
+sudo apt-get install rubygems boxgrinder-build
+boxgrinder-build -l /home/vagrant/boxgrinder-ubuntu-plugin precise-vmware.appl -p vmware --platform-config type:enterprise
