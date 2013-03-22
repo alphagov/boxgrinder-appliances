@@ -1,17 +1,23 @@
 name: ubuntu-precise
+summary: A minimal Precise 12.04 LTS base image
+version: 1
+release: 0
 os:
   name: ubuntu
   version: precise
   password: esicerp
 hardware:
+  cpus: 1
+  memory: 256
   partitions:
     "/":
       size: 10
     "swap":
       size: 1
 packages:
+  - grub2
+  - ubuntu-minimal
   - linux-headers-virtual
   - open-vm-dkms
   - open-vm-tools
   - openssh-server
-  - htop
