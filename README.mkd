@@ -32,6 +32,8 @@ re-export to a `.ova`.
 
 
 - add `xmlns:vcloud="http://www.vmware.com/vcloud/v1.5"` to the `Envelope` tag
+- change the `vmw:osType` attribute on the `OperatingSystemSection` tag to
+  `ubuntu64Guest`
 - change VirtualSystemType to vmx-08
 - add the following to the inside of the VirtualSystem tag:
 
