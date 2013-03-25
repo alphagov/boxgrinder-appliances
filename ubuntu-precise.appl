@@ -16,8 +16,18 @@ hardware:
       size: 1
 packages:
   - grub2
-  - ubuntu-minimal
-  - linux-headers-virtual
-  - open-vm-dkms
-  - open-vm-tools
+  - language-pack-en-base
   - openssh-server
+  - ubuntu-minimal
+files:
+  "/root":
+    - "script/postinstall.sh"
+    - "script/postinstall-vmware.sh"
+    - "script/postinstall-virtualbox.sh"
+post:
+  base:
+    - "sh /root/postinstall.sh"
+  vmware:
+    - "sh /root/postinstall-vmware.sh"
+  virtualbox:
+    - "sh /root/postinstall-virtualbox.sh"
