@@ -1,0 +1,72 @@
+#!/usr/bin/env python
+
+from __future__ import print_function
+
+import sys
+
+import lxml.etree
+from IPython import embed
+
+ovf_in = lxml.etree.parse(sys.stdin)
+
+root = ovf_in.getroot()
+
+namespaces = {key: val for key, val in root.nsmap.items() if key is not None}
+namespaces['vcloud'] = 'http://www.vmware.com/vcloud/v1.5'
+
+# Update the OperatingSystemSection tag osType to reflect ubuntu OS
+oss_tag = root.xpath('//ovf:OperatingSystemSection', namespaces=namespaces)[0]
+oss_tag.attrib['{%s}osType' % namespaces['ovf']] = 'ubuntu64Guest'
+
+# Set the VirtualSystemType (VMware HW version) to v8
+vst_tag = root.xpath('//vssd:VirtualSystemType', namespaces=namespaces)[0]
+vst_tag.text = 'vmx-08'
+
+# Add the vCloud customization section at the end of the VirtualSystem tag
+vs_tag = root.xpath('//ovf:VirtualSystem', namespaces=namespaces)[0]
+
+customization = """
+    <vcloud:CustomizationSection goldMaster="false" ovf:required="false"
+      xmlns="{ovf}"
+      xmlns:ovf="{ovf}"
+      xmlns:vcloud="{vcloud}">
+      <Info>VApp template customization section</Info>
+      <vcloud:CustomizeOnInstantiate>true</vcloud:CustomizeOnInstantiate>
+    </vcloud:CustomizationSection>"""
+guest_customization = """
+    <vcloud:GuestCustomizationSection ovf:required="false"
+      xmlns="{ovf}"
+      xmlns:ovf="{ovf}"
+      xmlns:vcloud="{vcloud}">
+      <Info>Specifies Guest OS Customization Settings</Info>
+      <vcloud:Enabled>true</vcloud:Enabled>
+      <vcloud:ChangeSid>false</vcloud:ChangeSid>
+      <vcloud:JoinDomainEnabled>false</vcloud:JoinDomainEnabled>
+      <vcloud:UseOrgSettings>false</vcloud:UseOrgSettings>
+      <vcloud:AdminPasswordEnabled>false</vcloud:AdminPasswordEnabled>
+      <vcloud:AdminPasswordAuto>true</vcloud:AdminPasswordAuto>
+      <!-- Maybe try this another time... -->
+      <!-- <vcloud:AdminPassword>tutu</vcloud:AdminPassword> -->
+      <vcloud:ResetPasswordRequired>false</vcloud:ResetPasswordRequired>
+      <vcloud:CustomizationScript></vcloud:CustomizationScript>
+    </vcloud:GuestCustomizationSection>"""
+network = """
+    <vcloud:NetworkConnectionSection ovf:required="false"
+      xmlns="{ovf}"
+      xmlns:ovf="{ovf}"
+      xmlns:vcloud="{vcloud}">
+      <Info>The configuration parameters for logical networks</Info>
+      <vcloud:PrimaryNetworkConnectionIndex>0</vcloud:PrimaryNetworkConnectionIndex>
+      <vcloud:NetworkConnection network="nat" needsCustomization="true">
+        <vcloud:NetworkConnectionIndex>0</vcloud:NetworkConnectionIndex>
+        <vcloud:IsConnected>false</vcloud:IsConnected>
+        <vcloud:MACAddress>00:01:02:03:04:05</vcloud:MACAddress>
+        <vcloud:IpAddressAllocationMode>NONE</vcloud:IpAddressAllocationMode>
+      </vcloud:NetworkConnection>
+    </vcloud:NetworkConnectionSection>"""
+
+for tag in (customization, guest_customization, network):
+    el = lxml.etree.XML(tag.format(**namespaces))
+    vs_tag.append(el)
+
+print(lxml.etree.tostring(ovf_in))
