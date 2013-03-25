@@ -19,6 +19,9 @@ packages:
   - language-pack-en-base
   - openssh-server
   - ubuntu-minimal
+  # remove these when we get the provider-specific postinstalls working
+  - open-vm-dkms
+  - open-vm-tools
 files:
   "/root":
     - "script/postinstall.sh"
@@ -26,8 +29,8 @@ files:
     - "script/postinstall-virtualbox.sh"
 post:
   base:
-    - "sh /root/postinstall.sh"
-  vmware:
-    - "sh /root/postinstall-vmware.sh"
-  virtualbox:
-    - "sh /root/postinstall-virtualbox.sh"
+    - "sh /root/script/postinstall.sh"
+  #vmware:
+  #  - "sh /root/script/postinstall-vmware.sh"
+  #virtualbox:
+  #  - "sh /root/script/postinstall-virtualbox.sh"

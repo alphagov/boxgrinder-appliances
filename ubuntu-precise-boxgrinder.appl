@@ -48,6 +48,9 @@ packages:
   - vim
   - git
   - python-software-properties
+  # remove these when we get the provider-specific postinstalls working
+  - open-vm-dkms
+  - open-vm-tools
 files:
   "/root":
     - "script/postinstall.sh"
@@ -56,9 +59,9 @@ files:
     - "script/postinstall-virtualbox.sh"
 post:
   base:
-    - "sh /root/postinstall.sh"
-    - "sh /root/postinstall-boxgrinder.sh"
-  vmware:
-    - "sh /root/postinstall-vmware.sh"
-  virtualbox:
-    - "sh /root/postinstall-virtualbox.sh"
+    - "sh /root/script/postinstall.sh"
+    - "sh /root/script/postinstall-boxgrinder.sh"
+  #vmware:
+  #  - "sh /root/script/postinstall-vmware.sh"
+  #virtualbox:
+  #  - "sh /root/script/postinstall-virtualbox.sh"
