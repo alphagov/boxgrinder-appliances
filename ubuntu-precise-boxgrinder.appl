@@ -48,9 +48,17 @@ packages:
   - vim
   - git
   - python-software-properties
-post:
-  base:
-    - "bash /root/ubuntu-precise-boxgrinder-postinstall.sh"
 files:
   "/root":
-    - ubuntu-precise-boxgrinder-postinstall.sh
+    - "script/postinstall.sh"
+    - "script/postinstall-boxgrinder.sh"
+    - "script/postinstall-vmware.sh"
+    - "script/postinstall-virtualbox.sh"
+post:
+  base:
+    - "sh /root/postinstall.sh"
+    - "sh /root/postinstall-boxgrinder.sh"
+  vmware:
+    - "sh /root/postinstall-vmware.sh"
+  virtualbox:
+    - "sh /root/postinstall-virtualbox.sh"
