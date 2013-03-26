@@ -11,8 +11,8 @@ apt-get update
 # many of the modules for the default ubuntu kernel, including
 # virtio_console.ko and friends which are required for sthe supermin appliance
 apt-get -y install linux-image-extra-virtual rubygems boxgrinder-build
-apt-get clean
-apt-get autoremove --purge
+apt-get -y clean
+apt-get -y autoremove --purge
 
 # boxgrinder-build is a bit broken on Ubuntu: it relies on a wrapper script
 # ("qemu.wrapper") to call out to qemu, which is a bash script with a
