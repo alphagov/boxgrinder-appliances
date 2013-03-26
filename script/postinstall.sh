@@ -1,8 +1,8 @@
 #!/bin/sh
 export DEBIAN_FRONTEND=noninteractive
 export DEBIAN_PRIORITY=critical
-apt-get clean
-apt-get autoremove --purge
+apt-get clean -y
+apt-get autoremove -y --purge
 
 # Set up the machine to regenerate its SSH host keys on boot.
 touch /etc/ssh/regenerate_host_keys
@@ -37,4 +37,3 @@ find /var/log/ -name "*log" -type f | xargs -I % sh -c "cat /dev/null > %"
 [ -f /var/log/syslog ] && cat /dev/null > /var/log/syslog
 [ -f /var/log/auth.log ] && cat /dev/null > /var/log/auth.log
 [ -f /root/.bash_history ] && cat /dev/null > /root/.bash_history
-history -c
