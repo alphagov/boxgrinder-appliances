@@ -11,7 +11,7 @@ $(UBUNTU_PRECISE_ROOT)/ubuntu-precise.ova: $(UBUNTU_PRECISE_ROOT)/ubuntu-precise
 	  mv ubuntu-precise.ovf ubuntu-precise.ovf-pristine && \
 	  ovf-customizer <ubuntu-precise.ovf-pristine >ubuntu-precise.ovf && \
 	  openssl sha1 ubuntu-precise.ovf ubuntu-precise-disk1.vmdk > ubuntu-precise.mf && \
-	  ubuntu-precise.ovf ubuntu-precise.ova
+	  ovftool ubuntu-precise.ovf ubuntu-precise.ova
 
 $(UBUNTU_PRECISE_ROOT)/ubuntu-precise.vmx: ubuntu-precise.appl
 	boxgrinder-build -l boxgrinder-ubuntu-plugin $< -p vmware --platform-config type:personal,thin_disk:true
