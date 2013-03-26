@@ -1,18 +1,22 @@
-BOXGRINDER_ARCH := $(shell arch)
-BOXGRINDER_BUILD_ROOT = build/appliances/$(BOXGRINDER_ARCH)
+PATH := $(shell pwd)/bin:$(PATH)
 
-UBUNTU_PRECISE_ROOT = $(BOXGRINDER_BUILD_ROOT)/ubuntu/precise/ubuntu-precise/1.0/vmware-plugin
+UBUNTU_PRECISE_ROOT = $(shell ./bin/boxgrinder-dir ubuntu-precise.appl)/vmware-plugin
 
 .PHONY: ubuntu-precise
 ubuntu-precise: $(UBUNTU_PRECISE_ROOT)/ubuntu-precise.ova
 
 $(UBUNTU_PRECISE_ROOT)/ubuntu-precise.ova: $(UBUNTU_PRECISE_ROOT)/ubuntu-precise.vmx
-	cd $(dir $@); ovftool $(notdir $<) $(notdir $@)
+	cd $(dir $@) && \
+	  ovftool ubuntu-precise.vmx ubuntu-precise.ovf && \
+	  mv ubuntu-precise.ovf ubuntu-precise.ovf-pristine && \
+	  ovf-customizer <ubuntu-precise.ovf-pristine >ubuntu-precise.ovf && \
+	  openssl sha1 ubuntu-precise.ovf ubuntu-precise-disk1.vmdk > ubuntu-precise.mf && \
+	  ubuntu-precise.ovf ubuntu-precise.ova
 
 $(UBUNTU_PRECISE_ROOT)/ubuntu-precise.vmx: ubuntu-precise.appl
 	boxgrinder-build -l boxgrinder-ubuntu-plugin $< -p vmware --platform-config type:personal,thin_disk:true
 
-UBUNTU_PRECISE_BOXGRINDER_ROOT = $(BOXGRINDER_BUILD_ROOT)/ubuntu/precise/ubuntu-precise-boxgrinder/1.0/vmware-plugin
+UBUNTU_PRECISE_BOXGRINDER_ROOT = $(shell ./bin/boxgrinder-dir ubuntu-precise-boxgrinder.appl)/vmware-plugin
 
 .PHONY: ubuntu-precise-boxgrinder
 ubuntu-precise-boxgrinder: $(UBUNTU_PRECISE_BOXGRINDER_ROOT)/ubuntu-precise-boxgrinder.ova
@@ -26,6 +30,3 @@ $(UBUNTU_PRECISE_BOXGRINDER_ROOT)/ubuntu-precise-boxgrinder.vmx: ubuntu-precise-
 .PHONY: clean
 clean:
 	rm -rf build/
-
-
-
