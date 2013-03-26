@@ -47,6 +47,9 @@ packages:
   - xfsprogs
   - vim
   - git
+  - python
+  - python-lxml
+  - python-yaml
   - python-software-properties
   # remove these when we get the provider-specific postinstalls working
   - open-vm-dkms
