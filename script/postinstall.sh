@@ -32,8 +32,8 @@ nameserver 8.8.4.4
 EOM
 
 # And, finally, truncate any and all log files
-find /var/log/ -name "*log" -type f | xargs -I % sh -c "cat /dev/null > %"
-[ -f /var/log/wtmp ] && cat /dev/null > /var/log/wtmp
-[ -f /var/log/syslog ] && cat /dev/null > /var/log/syslog
-[ -f /var/log/auth.log ] && cat /dev/null > /var/log/auth.log
-[ -f /root/.bash_history ] && cat /dev/null > /root/.bash_history
+find /var/log/ -name "*log" -type f | xargs -I % sh -c "cat /dev/null >%"
+[ -f /var/log/wtmp ] && cat /dev/null >/var/log/wtmp || true
+[ -f /var/log/syslog ] && cat /dev/null >/var/log/syslog || true
+[ -f /var/log/auth.log ] && cat /dev/null >/var/log/auth.log || true
+[ -f /root/.bash_history ] && cat /dev/null >/root/.bash_history || true
