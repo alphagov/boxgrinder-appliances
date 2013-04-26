@@ -20,6 +20,7 @@ packages:
   - openssh-server
   - ubuntu-minimal
   # remove these when we get the provider-specific postinstalls working
+  - linux-headers-virtual # required so that the vmware kernel modules compile
   - open-vm-dkms
   - open-vm-tools
 files:
