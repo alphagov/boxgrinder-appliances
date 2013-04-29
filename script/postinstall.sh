@@ -5,6 +5,7 @@ apt-get clean -y
 apt-get autoremove -y --purge
 
 # Set up the machine to regenerate its SSH host keys on boot.
+rm /etc/ssh/ssh_host_*
 touch /etc/ssh/regenerate_host_keys
 cat >/etc/rc.local <<EOM
 #!/bin/sh -e
@@ -16,7 +17,7 @@ cat >/etc/rc.local <<EOM
 # value on error.
 
 if [ -f /etc/ssh/regenerate_host_keys ]; then
-  rm /etc/ssh/ssh_host_*
+  rm -f /etc/ssh/ssh_host_*
   /usr/sbin/dpkg-reconfigure openssh-server
   rm /etc/ssh/regenerate_host_keys
 fi
