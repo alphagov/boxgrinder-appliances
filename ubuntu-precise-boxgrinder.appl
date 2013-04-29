@@ -51,7 +51,8 @@ packages:
   - python-lxml
   - python-yaml
   - python-software-properties
-  # remove these when we get the provider-specific postinstalls working
+  # TODO: move the following into a provider-specific postinstall
+  - linux-headers-virtual
   - open-vm-dkms
   - open-vm-tools
 files:

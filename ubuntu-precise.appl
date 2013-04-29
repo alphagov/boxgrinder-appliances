@@ -19,8 +19,8 @@ packages:
   - language-pack-en-base
   - openssh-server
   - ubuntu-minimal
-  # remove these when we get the provider-specific postinstalls working
-  - linux-headers-virtual # required so that the vmware kernel modules compile
+  # TODO: move the following into a provider-specific postinstall
+  - linux-headers-virtual
   - open-vm-dkms
   - open-vm-tools
 files:
