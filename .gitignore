@@ -2,3 +2,4 @@
 /.gems
 /build
 /log
+.vagrant
