@@ -6,7 +6,7 @@ export DEBIAN_PRIORITY=critical
 
 # Install boxgrinder and boxgrinder-ubuntu-plugin
 apt-get update
-apt-get -y install python-software-properties git
+apt-get -y install python-software-properties git python-yaml
 apt-add-repository -y ppa:rubiojr/boxgrinder-stable
 apt-get update
 # libguestfs has a missing dependency on linux-image-extra-*, which provides
@@ -51,3 +51,10 @@ yes | ./VMware-ovftool-3.0.1-801290-lin.x86_64.bundle --required --console
 
 # Lastly, check out the GDS appliances
 cd /root && git clone https://github.com/alphagov/boxgrinder-appliances
+
+if [ -d /home/vagrant ]; then
+  mkdir -p /home/vagrant/build
+  chown vagrant /home/vagrant/build
+  rm -r /home/vagrant/boxgrinder-appliances/build
+  ln -s /home/vagrant/boxgrinder-appliances/build /home/vagrant/build
+fi
