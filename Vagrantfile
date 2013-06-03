@@ -10,6 +10,10 @@ Vagrant::Config.run do |config|
   config.vm.provision :shell, :path => "script/postinstall-boxgrinder.sh"
 end
 
+Vagrant::VERSION < "1.1.0" and Vagrant.configure("1") do |config|
+  config.vm.share_folder "boxgrinder-appliances", "/home/vagrant/boxgrinder-appliances", ".", :nfs => true
+end
+
 Vagrant::VERSION >= "1.1.0" and Vagrant.configure("2") do |config|
 
   # Configure for the virtualbox provider
@@ -24,5 +28,7 @@ Vagrant::VERSION >= "1.1.0" and Vagrant.configure("2") do |config|
     config.vm.box_url = VF_BOX_URI
     f.vmx["displayName"] = "boxgrinder"
   end
+
+  config.vm.synced_folder ".", "/home/vagrant/boxgrinder-appliances"
 
 end
