@@ -17,15 +17,15 @@ end
 Vagrant::VERSION >= "1.1.0" and Vagrant.configure("2") do |config|
 
   # Configure for the virtualbox provider
-  config.vm.provider :virtualbox do |vb|
-    config.vm.box = BOX_NAME
-    config.vm.box_url = BOX_URI
+  config.vm.provider :virtualbox do |vb, override|
+    override.vm.box = BOX_NAME
+    override.vm.box_url = BOX_URI
   end
 
   # Configure for the VMWare Fusion provider
-  config.vm.provider :vmware_fusion do |f|
-    config.vm.box = VF_BOX_NAME
-    config.vm.box_url = VF_BOX_URI
+  config.vm.provider :vmware_fusion do |f, override|
+    override.vm.box = VF_BOX_NAME
+    override.vm.box_url = VF_BOX_URI
     f.vmx["displayName"] = "boxgrinder"
   end
 
