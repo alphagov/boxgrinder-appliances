@@ -5,6 +5,8 @@ export DEBIAN_FRONTEND=noninteractive
 export DEBIAN_PRIORITY=critical
 
 # Install boxgrinder and boxgrinder-ubuntu-plugin
+apt-get update
+apt-get -y install python-software-properties git
 apt-add-repository -y ppa:rubiojr/boxgrinder-stable
 apt-get update
 # libguestfs has a missing dependency on linux-image-extra-*, which provides
