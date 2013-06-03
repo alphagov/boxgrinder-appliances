@@ -55,6 +55,6 @@ cd /root && git clone https://github.com/alphagov/boxgrinder-appliances
 if [ -d /home/vagrant ]; then
   mkdir -p /home/vagrant/build
   chown vagrant /home/vagrant/build
-  rm -r /home/vagrant/boxgrinder-appliances/build
-  ln -s /home/vagrant/boxgrinder-appliances/build /home/vagrant/build
+  test -d /home/vagrant/boxgrinder-appliances/build && rm -r /home/vagrant/boxgrinder-appliances/build
+  ln -s /home/vagrant/build /home/vagrant/boxgrinder-appliances/build
 fi
