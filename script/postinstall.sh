@@ -34,6 +34,18 @@ nameserver 8.8.4.4
 search localdomain
 EOM
 
+# Allow ubuntu to sudo without a password
+cat >/etc/sudoers.d/ubuntu <<EOM
+ubuntu ALL=(ALL) NOPASSWD: ALL
+EOM
+chmod 0440 /etc/sudoers.d/ubuntu
+chown root /etc/sudoers.d/ubuntu
+
+cat >>/etc/sudoers <<EOM
+#includedir /etc/sudoers.d
+EOM
+
+
 # And, finally, truncate any and all log files
 find /var/log/ -name "*log" -type f | xargs -I % sh -c "cat /dev/null >%"
 [ -f /var/log/wtmp ] && cat /dev/null >/var/log/wtmp || true
