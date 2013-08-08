@@ -1,0 +1,7 @@
+export VMNAME="ubuntu-precise-enterprise"
+export TEMPLATE="ubuntu-precise.ova"
+export KEY="username"
+export ORG="organisation"
+export API="api.vcd.portal.skyscapecloud.com"
+echo "Uploading template: $VMNAME"
+ovftool -n=$VMNAME --vCloudTemplate $TEMPLATE "vcloud://${KEY}@${API}/?org=${ORG}&catalog=Default&vappTemplate=${VMNAME}"
