@@ -14,7 +14,7 @@ $(UBUNTU_PRECISE_ROOT)/ubuntu-precise.ova: $(UBUNTU_PRECISE_ROOT)/ubuntu-precise
 	  ovftool ubuntu-precise.ovf ubuntu-precise.ova
 
 $(UBUNTU_PRECISE_ROOT)/ubuntu-precise.vmx: ubuntu-precise.appl
-	boxgrinder-build -l boxgrinder-ubuntu-plugin $< -p vmware --platform-config type:personal,thin_disk:true
+	boxgrinder-build -l boxgrinder-ubuntu-plugin $< -p vmware --platform-config type:enterprise,thin_disk:true
 
 UBUNTU_PRECISE_BOXGRINDER_ROOT = $(shell ./bin/boxgrinder-dir ubuntu-precise-boxgrinder.appl)/vmware-plugin
 
@@ -25,7 +25,7 @@ $(UBUNTU_PRECISE_BOXGRINDER_ROOT)/ubuntu-precise-boxgrinder.ova: $(UBUNTU_PRECIS
 	cd $(dir $@); ovftool $(notdir $<) $(notdir $@)
 
 $(UBUNTU_PRECISE_BOXGRINDER_ROOT)/ubuntu-precise-boxgrinder.vmx: ubuntu-precise-boxgrinder.appl
-	boxgrinder-build -l boxgrinder-ubuntu-plugin $< -p vmware --platform-config type:personal,thin_disk:true
+	boxgrinder-build -l boxgrinder-ubuntu-plugin $< -p vmware --platform-config type:enterprise,thin_disk:true
 
 .PHONY: clean
 clean:
