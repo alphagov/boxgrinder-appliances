@@ -24,6 +24,16 @@ oss_tag.setAttribute('vmw:osType', 'ubuntu64Guest')
 vst_tag = dom.getElementsByTagName('vssd:VirtualSystemType')[0]
 vst_tag.firstChild.replaceWholeText('vmx-08')
 
+# Change network name to Default.
+net_name = 'Default'
+
+net_tag = dom.getElementsByTagName('NetworkSection')[0]
+net_tag = net_tag.getElementsByTagName('Network')[0]
+net_tag.setAttribute('ovf:name', net_name)
+
+conn_tag = dom.getElementsByTagName('rasd:Connection')[0]
+conn_tag.firstChild.replaceWholeText(net_name)
+
 # Add the vCloud customization section at the end of the VirtualSystem tag
 vs_tag = dom.getElementsByTagName('VirtualSystem')[0]
 
@@ -57,7 +67,7 @@ network = """
     <vcloud:NetworkConnectionSection ovf:required="false">
       <Info>The configuration parameters for logical networks</Info>
       <vcloud:PrimaryNetworkConnectionIndex>0</vcloud:PrimaryNetworkConnectionIndex>
-      <vcloud:NetworkConnection network="nat" needsCustomization="true">
+      <vcloud:NetworkConnection network="Default" needsCustomization="true">
         <vcloud:NetworkConnectionIndex>0</vcloud:NetworkConnectionIndex>
         <vcloud:IsConnected>false</vcloud:IsConnected>
         <vcloud:MACAddress>00:01:02:03:04:05</vcloud:MACAddress>
