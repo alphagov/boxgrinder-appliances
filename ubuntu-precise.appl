@@ -19,10 +19,6 @@ packages:
   - language-pack-en-base
   - openssh-server
   - ubuntu-minimal
-  # TODO: move the following into a provider-specific postinstall
-  - linux-headers-virtual
-  - open-vm-dkms
-  - open-vm-tools
 files:
   "/root":
     - "script/postinstall.sh"
@@ -31,7 +27,6 @@ files:
 post:
   base:
     - "sh /root/script/postinstall.sh"
-  #vmware:
-  #  - "sh /root/script/postinstall-vmware.sh"
+    - "sh /root/script/postinstall-vmware.sh"
   #virtualbox:
   #  - "sh /root/script/postinstall-virtualbox.sh"
