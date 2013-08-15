@@ -1,4 +1,13 @@
 #!/bin/sh
+#
+# This installs VMware Tools from VMware's own Operating System Specific
+# Packages (OSP). They allow Guest Customization to modify a VM's hostname
+# and static network configuration.
+#
+# The VMware kernel drivers are currently omitted because they are
+# troublesome to build and not essential for provisioning. They could be
+# subsequently managed by Puppet, if need be.
+
 export DEBIAN_FRONTEND=noninteractive
 export DEBIAN_PRIORITY=critical
 
