@@ -1,31 +1,48 @@
-PATH := $(shell pwd)/bin:$(PATH)
+TOPDIR := $(dir $(lastword $(MAKEFILE_LIST)))
 
-UBUNTU_PRECISE_ROOT = $(shell ./bin/boxgrinder-dir ubuntu-precise.appl)/vmware-plugin
+provider ?= vmware
 
-.PHONY: ubuntu-precise
-ubuntu-precise: $(UBUNTU_PRECISE_ROOT)/ubuntu-precise.ova
+provider_args_vmware ?= --platform-config type:personal,thin_disk:true
+#provider_args_virtualbox ?= ....
 
-$(UBUNTU_PRECISE_ROOT)/ubuntu-precise.ova: $(UBUNTU_PRECISE_ROOT)/ubuntu-precise.vmx
-	cd $(dir $@) && \
-	  ovftool ubuntu-precise.vmx ubuntu-precise.ovf && \
-	  mv ubuntu-precise.ovf ubuntu-precise.ovf-pristine && \
-	  ovf-customizer <ubuntu-precise.ovf-pristine >ubuntu-precise.ovf && \
-	  openssl sha1 ubuntu-precise.ovf ubuntu-precise-disk1.vmdk > ubuntu-precise.mf && \
-	  ovftool ubuntu-precise.ovf ubuntu-precise.ova
+# If not set pull the default provider args for the current provider type
+provider_args ?= ${provider_args_${provider}}
 
-$(UBUNTU_PRECISE_ROOT)/ubuntu-precise.vmx: ubuntu-precise.appl
-	boxgrinder-build -l boxgrinder-ubuntu-plugin $< -p vmware --platform-config type:personal,thin_disk:true
+ubuntu-precise: plugins := -l boxgrinder-ubuntu-plugin
+ubuntu-precise-boxgrinder: plugins := -l boxgrinder-ubuntu-plugin
 
-UBUNTU_PRECISE_BOXGRINDER_ROOT = $(shell ./bin/boxgrinder-dir ubuntu-precise-boxgrinder.appl)/vmware-plugin
+# Export all variables to submake
+export
+# Don't delete intermediate files - we want the .mf file etc.
+.SECONDARY:
 
-.PHONY: ubuntu-precise-boxgrinder
-ubuntu-precise-boxgrinder: $(UBUNTU_PRECISE_BOXGRINDER_ROOT)/ubuntu-precise-boxgrinder.ova
+%: %.appl
+	$(eval build_dir=$(shell $(TOPDIR)bin/boxgrinder-introspect $@.appl --build-dir)/$(provider)-plugin)
+	$(eval appl_name=$(shell $(TOPDIR)bin/boxgrinder-introspect $@.appl --name))
+	$(eval appl_file:=$<)
+	$(MAKE) $(build_dir)/$(appl_name).ova
 
-$(UBUNTU_PRECISE_BOXGRINDER_ROOT)/ubuntu-precise-boxgrinder.ova: $(UBUNTU_PRECISE_BOXGRINDER_ROOT)/ubuntu-precise-boxgrinder.vmx
-	cd $(dir $@); ovftool $(notdir $<) $(notdir $@)
 
-$(UBUNTU_PRECISE_BOXGRINDER_ROOT)/ubuntu-precise-boxgrinder.vmx: ubuntu-precise-boxgrinder.appl
-	boxgrinder-build -l boxgrinder-ubuntu-plugin $< -p vmware --platform-config type:personal,thin_disk:true
+$(build_dir)/$(appl_name).vmx: $(appl_file)
+	boxgrinder-build $(plugins) $< -p $(provider) $(provider_args)
+
+
+# Need to call it %.ovf then move it so the references in the file are right
+# And we need to CD into the dir so that the paths are relative to the dir its in.
+%-pristine.ovf %-disk1.vmdk: %.vmx
+	cd $(@D) && \
+	ovftool $(notdir $(basename $<)).vmx $(notdir $(basename $<)).ovf
+	mv $(basename $<).ovf $(basename $<)-pristine.ovf
+
+%.ovf: %-pristine.ovf
+	$(TOPDIR)bin/ovf-customizer $(shell $(TOPDIR)bin/boxgrinder-introspect $(appl_file) --os-type) < $< > $@
+
+# Checksum file.
+%.mf: %.ovf %-disk1.vmdk
+	cd $(@D) && openssl sha1 $(notdir $^) > $(notdir $@)
+
+%.ova: %.ovf %.mf %-disk1.vmdk
+	ovftool $< $@
 
 .PHONY: clean
 clean:
