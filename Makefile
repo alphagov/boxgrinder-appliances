@@ -24,15 +24,18 @@ export
 
 
 $(build_dir)/$(appl_name).vmx: $(appl_file)
-	boxgrinder-build $(plugins) $< -p $(provider) $(provider_args)
+	boxgrinder-build $(plugins) -f $< -p $(provider) $(provider_args)
 
 
 # Need to call it %.ovf then move it so the references in the file are right
 # And we need to CD into the dir so that the paths are relative to the dir its in.
 %-pristine.ovf %-disk1.vmdk: %.vmx
 	cd $(@D) && \
-	ovftool $(notdir $(basename $<)).vmx $(notdir $(basename $<)).ovf
+	ovftool -o $(notdir $(basename $<)).vmx $(notdir $(basename $<)).ovf
 	mv $(basename $<).ovf $(basename $<)-pristine.ovf
+	@# Remove the manifest file - it's not right and confuses part of the process
+	rm $(basename $<).mf
+
 
 %.ovf: %-pristine.ovf
 	$(TOPDIR)bin/ovf-customizer $(shell $(TOPDIR)bin/boxgrinder-introspect $(appl_file) --os-type) < $< > $@
@@ -42,7 +45,7 @@ $(build_dir)/$(appl_name).vmx: $(appl_file)
 	cd $(@D) && openssl sha1 $(notdir $^) > $(notdir $@)
 
 %.ova: %.ovf %.mf %-disk1.vmdk
-	ovftool $< $@
+	ovftool -o $< $@
 
 .PHONY: clean
 clean:
