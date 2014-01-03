@@ -13,12 +13,17 @@ namespaces = {
   'vcloud': 'http://www.vmware.com/vcloud/v1.5',
 }
 
+if len(sys.argv) >= 2:
+  osType = sys.argv[1]
+else:
+  osType = 'ubuntu64Guest'
+
 root = dom.getElementsByTagName('Envelope')[0]
 root.setAttribute('xmlns:vcloud', namespaces['vcloud'])
 
 # Update the OperatingSystemSection tag osType to reflect ubuntu OS
 oss_tag = dom.getElementsByTagName('OperatingSystemSection')[0]
-oss_tag.setAttribute('vmw:osType', 'ubuntu64Guest')
+oss_tag.setAttribute('vmw:osType', osType)
 
 # # Set the VirtualSystemType (VMware HW version) to v8
 vst_tag = dom.getElementsByTagName('vssd:VirtualSystemType')[0]
