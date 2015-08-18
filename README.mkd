@@ -1,3 +1,7 @@
+# DEPRECATED
+
+This repository is no longer maintained.
+
 # boxgrinder-appliances
 
 A set of configuration files for building VM base images for (potentially)
